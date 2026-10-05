@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.context-aware-dev-assistant/schemas/developer-event.json",
+  "title": "DeveloperEvent",
+  "description": "Shared privacy-preserving event format produced by VS Code and browser extensions. Do not include raw source code, passwords, tokens, or unnecessary sensitive browser data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "session_id",
+    "timestamp",
+    "application",
+    "event_type",
+    "context_category",
+    "metadata"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Unique identifier for this event (UUID recommended).",
+      "minLength": 1
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Identifier for the developer session that produced this event.",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp when the event occurred (UTC preferred)."
+    },
+    "application": {
+      "type": "string",
+      "description": "Source application that captured the event.",
+      "enum": ["vscode", "browser"]
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Specific event kind within the application (e.g. file_open, tab_switch). Exact values defined per collector.",
+      "minLength": 1
+    },
+    "context_category": {
+      "type": "string",
+      "description": "High-level context bucket used for task inference and privacy policy.",
+      "enum": [
+        "editor",
+        "debug",
+        "terminal",
+        "vcs",
+        "navigation",
+        "search",
+        "documentation",
+        "testing",
+        "idle",
+        "other"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Sanitised, non-sensitive structured attributes. Must not contain raw source code, secrets, passwords, tokens, cookies, form field values, or full page content.",
+      "additionalProperties": true,
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Programming language id when relevant (IDE)."
+        },
+        "file_extension": {
+          "type": "string",
+          "description": "File extension only — not full path content."
+        },
+        "host_category": {
+          "type": "string",
+          "description": "Coarse browser host category (e.g. docs, vcs, stackoverflow) — not full URL query strings with secrets."
+        }
+      }
+    }
+  }
+}

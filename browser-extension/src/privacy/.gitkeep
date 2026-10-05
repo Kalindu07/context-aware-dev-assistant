@@ -1,0 +1,3 @@
+# Privacy filters for browser capture.
+# Apply redaction BEFORE events leave this extension.
+# Never emit: passwords, tokens, cookies, form values, full page HTML, unnecessary PII.

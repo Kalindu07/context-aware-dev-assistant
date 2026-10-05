@@ -1,0 +1,30 @@
+# Local development services (optional)
+# No remote telemetry; all services bind to localhost by default.
+
+services:
+  # SQLite is file-based — no separate DB container required.
+  # ChromaDB can be run locally later when RAG is implemented.
+  # Ollama can be run separately when local LLM generation is added.
+
+  # Placeholder for future local ChromaDB (do not enable until RAG phase)
+  # chromadb:
+  #   image: chromadb/chroma:latest
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - chroma_data:/chroma/chroma
+  #   profiles: ["rag"]
+
+  # Placeholder for future backend container
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - "8000:8000"
+  #   env_file:
+  #     - ./backend/.env
+  #   volumes:
+  #     - ./backend:/app
+  #     - local_data:/data
+  #   profiles: ["backend"]
+
+volumes: {}

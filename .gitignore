@@ -1,0 +1,86 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# IDE / editor
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & local runtime
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Local databases & vector stores
+*.db
+*.sqlite
+*.sqlite3
+chroma/
+.chromadb/
+**/data/local/
+
+# ML artefacts (trained weights — keep directories, ignore large files)
+ml/models/**
+!ml/models/.gitkeep
+!ml/models/README.md
+*.pkl
+*.joblib
+*.pt
+*.pth
+*.onnx
+*.h5
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Build outputs
+vscode-extension/out/
+vscode-extension/*.vsix
+browser-extension/dist/
+suggestion-ui/dist/
+*.tsbuildinfo
+
+# Test / coverage
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Secrets & local config
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Temporary
+tmp/
+temp/
+*.tmp
