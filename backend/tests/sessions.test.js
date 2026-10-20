@@ -70,3 +70,22 @@ describe("production bootstrap restriction", () => {
     assert.match(res.body.detail, /bootstrap is disabled/i);
   });
 });
+
+describe("production bootstrap with misconfigured ALLOW flag", () => {
+  // Even if ALLOW_DEV_CONSENT_BOOTSTRAP=true, non-development env must reject bootstrap.
+  const { app } = buildTestApp({
+    appEnv: "production",
+    allowBootstrap: true,
+  });
+  after(() => app.closeDatabase());
+
+  it("rejects bootstrap when APP_ENV is not development", async () => {
+    const res = await request(app).post("/sessions").send({
+      application: "vscode",
+      bootstrap_consent: true,
+      participant_pseudo_id: "dev-user",
+    });
+    assert.equal(res.status, 403);
+    assert.match(res.body.detail, /bootstrap is disabled/i);
+  });
+});

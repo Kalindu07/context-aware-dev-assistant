@@ -2,7 +2,7 @@
 
 A Personalized, Privacy-Preserving Cross-Application Proactive AI Assistant for Software Development
 
-Local-first Final Year Project monorepo. Sprint 1 provides a Node.js + Express local event ingest API with SQLite. AI models, RAG, LLM generation, and extension collectors are not implemented yet.
+Local-first Final Year Project monorepo. Sprint 1 provides a Node.js + Express local event ingest API with SQLite. Sprint 2 adds an opt-in, privacy-aware VS Code context-capture extension. Browser capture, AI models, RAG, and suggestion UI are not implemented yet.
 
 ## Architecture
 
@@ -54,7 +54,7 @@ Evaluation
 
 | Directory | Purpose |
 |-----------|---------|
-| `vscode-extension/` | IDE context capture + privacy filtering |
+| `vscode-extension/` | Opt-in IDE context capture + privacy filtering (Sprint 2) |
 | `browser-extension/` | Browser context capture + privacy filtering |
 | `backend/` | Local Express orchestrator + SQLite event store |
 | `ml/` | Offline task inference, timing heuristic, experiments |
@@ -90,9 +90,17 @@ npm start
 npm test
 ```
 
+VS Code extension (Sprint 2):
+
+```bash
+cd vscode-extension
+npm install
+npm run compile
+npm test
+```
+
 Other packages remain scaffold-only until their implementation phase:
 
-- `vscode-extension/package.json`
 - `browser-extension/package.json`
 - `suggestion-ui/package.json`
 - `docker-compose.yml` (placeholders only)

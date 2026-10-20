@@ -1,3 +1,0 @@
-# Privacy filters for IDE capture.
-# Apply redaction BEFORE events leave this extension.
-# Never emit: raw source code, passwords, tokens, secrets, credentials.

@@ -16,6 +16,14 @@ export function errorHandler(err, _req, res, _next) {
   if (err?.type === "entity.parse.failed") {
     return res.status(400).json({ detail: "invalid JSON body" });
   }
+  // express.json limit exceeded (body-parser PayloadTooLargeError)
+  if (
+    err?.type === "entity.too.large" ||
+    err?.status === 413 ||
+    err?.name === "PayloadTooLargeError"
+  ) {
+    return res.status(413).json({ detail: "request entity too large" });
+  }
   // Never attach request bodies or secrets to logs.
   console.error("unhandled_error", err?.name || "Error", err?.message || "unknown");
   return res.status(500).json({ detail: "internal server error" });

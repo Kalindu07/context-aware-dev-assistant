@@ -71,4 +71,23 @@ describe("POST /events", () => {
     assert.equal(again.status, 409);
     assert.match(again.body.detail, /already exists/i);
   });
+
+  it("rejects malformed JSON bodies", async () => {
+    const res = await request(app)
+      .post("/events")
+      .set("Content-Type", "application/json")
+      .send('{"event_id":');
+    assert.equal(res.status, 400);
+    assert.match(res.body.detail, /invalid JSON/i);
+  });
+
+  it("rejects oversized JSON bodies", async () => {
+    const oversizedId = "x".repeat(40 * 1024);
+    const res = await request(app)
+      .post("/events")
+      .set("Content-Type", "application/json")
+      .send(`{"event_id":"${oversizedId}"}`);
+    assert.equal(res.status, 413);
+    assert.match(res.body.detail, /too large/i);
+  });
 });

@@ -1,28 +1,74 @@
 {
   "name": "context-aware-dev-assistant-vscode",
   "displayName": "Context-Aware Dev Assistant",
-  "description": "Privacy-preserving proactive AI assistant for software development (VS Code)",
-  "version": "0.0.1",
+  "description": "Privacy-preserving, opt-in IDE context capture for the local Context-Aware Dev Assistant",
+  "version": "0.2.0",
+  "publisher": "cada-fyp",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.85.0",
+    "node": ">=20"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": []
+    "commands": [
+      {
+        "command": "contextAwareDevAssistant.enableCapture",
+        "title": "CADA: Enable Context Capture"
+      },
+      {
+        "command": "contextAwareDevAssistant.disableCapture",
+        "title": "CADA: Disable Context Capture"
+      },
+      {
+        "command": "contextAwareDevAssistant.toggleCapture",
+        "title": "CADA: Toggle Context Capture"
+      }
+    ],
+    "configuration": {
+      "title": "Context-Aware Dev Assistant",
+      "properties": {
+        "contextAwareDevAssistant.backendBaseUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8000",
+          "description": "Base URL of the local backend API (must be reachable from this machine)."
+        },
+        "contextAwareDevAssistant.requestTimeoutMs": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 500,
+          "description": "HTTP timeout for backend requests in milliseconds."
+        },
+        "contextAwareDevAssistant.editEventThrottleMs": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 1000,
+          "description": "Minimum interval between document_edit events for the same file."
+        },
+        "contextAwareDevAssistant.useDevConsentBootstrap": {
+          "type": "boolean",
+          "default": false,
+          "description": "DEVELOPMENT ONLY. When true, uses POST /sessions with bootstrap_consent=true instead of POST /consent + POST /sessions. Keep false unless you intentionally enable backend ALLOW_DEV_CONSENT_BOOTSTRAP."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "echo \"Tests not configured yet\""
+    "test": "tsx --test test/unit/pathHash.test.ts test/unit/eventBuilder.test.ts test/unit/backendClient.test.ts test/unit/captureDefaults.test.ts test/unit/sessionGate.test.ts",
+    "lint:types": "tsc -p ./ --noEmit"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.3.0"
   },
   "private": true
