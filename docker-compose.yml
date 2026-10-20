@@ -15,9 +15,11 @@ services:
   #     - chroma_data:/chroma/chroma
   #   profiles: ["rag"]
 
-  # Placeholder for future backend container
+  # Placeholder for future Node.js backend container
   # backend:
-  #   build: ./backend
+  #   image: node:20-bookworm
+  #   working_dir: /app
+  #   command: npm start
   #   ports:
   #     - "8000:8000"
   #   env_file:

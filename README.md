@@ -2,7 +2,7 @@
 
 A Personalized, Privacy-Preserving Cross-Application Proactive AI Assistant for Software Development
 
-Local-first Final Year Project monorepo. This repository currently contains **folder structure and configuration scaffolds only** — no AI models, RAG, LLM, or business logic implementations yet.
+Local-first Final Year Project monorepo. Sprint 1 provides a Node.js + Express local event ingest API with SQLite. AI models, RAG, LLM generation, and extension collectors are not implemented yet.
 
 ## Architecture
 
@@ -42,8 +42,8 @@ Evaluation
 |-------|--------|
 | VS Code Extension | TypeScript + VS Code Extension API |
 | Browser Extension | TypeScript + Chrome Extension Manifest V3 |
-| Backend / Orchestrator | Python + FastAPI |
-| Database | SQLite |
+| Backend / Orchestrator | Node.js + Express |
+| Database | SQLite (`better-sqlite3`) |
 | Machine Learning | Python + scikit-learn (later) |
 | RAG / vector store | ChromaDB (later) |
 | Embeddings | sentence-transformers (later) |
@@ -56,7 +56,7 @@ Evaluation
 |-----------|---------|
 | `vscode-extension/` | IDE context capture + privacy filtering |
 | `browser-extension/` | Browser context capture + privacy filtering |
-| `backend/` | Local FastAPI orchestrator + SQLite event store |
+| `backend/` | Local Express orchestrator + SQLite event store |
 | `ml/` | Offline task inference, timing heuristic, experiments |
 | `rag/` | Personalised memory + retrieval (separate from ML) |
 | `suggestion-ui/` | Explainable suggestion front-end (React later) |
@@ -80,9 +80,18 @@ Evaluation
 
 ## Getting started (later)
 
-Do **not** install dependencies until the corresponding implementation phase. Config stubs:
+Backend (Sprint 1):
 
-- `backend/requirements.txt` + `backend/.env.example`
+```bash
+cd backend
+copy .env.example .env
+npm install
+npm start
+npm test
+```
+
+Other packages remain scaffold-only until their implementation phase:
+
 - `vscode-extension/package.json`
 - `browser-extension/package.json`
 - `suggestion-ui/package.json`

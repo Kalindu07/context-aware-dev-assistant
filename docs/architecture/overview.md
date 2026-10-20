@@ -21,6 +21,7 @@ Developer
 Design principles:
 - Capture-site privacy filtering (extensions)
 - Shared event schema across applications
-- ML experiments isolated in `/ml`
-- RAG isolated in `/rag`
+- Runtime orchestrator: Node.js + Express + SQLite (`/backend`)
+- ML experiments isolated in `/ml` (Python)
+- RAG isolated in `/rag` (Python)
 - Evaluation studies isolated in `/evaluation`
