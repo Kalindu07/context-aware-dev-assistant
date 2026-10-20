@@ -31,8 +31,8 @@ Events are filtered locally, then sent to the Sprint 1 Node.js backend (`http://
 - Capture is **disabled by default**. Nothing is sent until you run **CADA: Enable Context Capture**.
 - **CADA: Disable Context Capture** (or the status-bar toggle) stops collectors and sending **immediately**.
 - Status bar shows `CADA: capturing` when enabled, `CADA: off` otherwise.
-- Participant id is a random UUID (not username/email/machine name).
-- File paths are **HMAC-SHA256** hashed with a per-installation secret stored in `ExtensionContext.secrets`. Only `path_hash` is sent.
+- Participant id is a random UUID (not username/email/machine name), stored in `ExtensionContext.secrets`.
+- File paths are **HMAC-SHA256** hashed with a per-installation secret also stored in `ExtensionContext.secrets`. Only `path_hash` is sent.
 - Metadata allow-list matches the backend: `language`, `file_extension`, `host_category`, `path_hash`, `host_hash`.
 - Never captures raw source, clipboard, terminal output/commands, task names, or absolute paths.
 - Failed consent/session setup **does not** enable transmission.

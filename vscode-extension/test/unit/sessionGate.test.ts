@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { shouldSendEvents } from "../../src/capture/sessionGate";
+import { shouldCompleteSend, shouldSendEvents } from "../../src/capture/sessionGate";
 
 describe("sessionGate", () => {
   it("blocks transmission when capture is disabled or session init failed", () => {
@@ -22,6 +22,36 @@ describe("sessionGate", () => {
     assert.equal(
       shouldSendEvents({ transmitting: true, sessionId: "s1" }),
       true,
+    );
+  });
+
+  it("cancels in-flight sends when emit generation changes (disable)", () => {
+    assert.equal(
+      shouldCompleteSend({
+        transmitting: true,
+        sessionId: "s1",
+        startedGeneration: 0,
+        currentGeneration: 0,
+      }),
+      true,
+    );
+    assert.equal(
+      shouldCompleteSend({
+        transmitting: false,
+        sessionId: undefined,
+        startedGeneration: 0,
+        currentGeneration: 1,
+      }),
+      false,
+    );
+    assert.equal(
+      shouldCompleteSend({
+        transmitting: true,
+        sessionId: "s1",
+        startedGeneration: 0,
+        currentGeneration: 1,
+      }),
+      false,
     );
   });
 });

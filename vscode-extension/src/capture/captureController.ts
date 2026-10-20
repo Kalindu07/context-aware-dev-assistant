@@ -18,7 +18,7 @@ import type { CaptureEventType } from "../events/types";
 import { IdentityStore } from "../storage/identityStore";
 import { CaptureStatusBar } from "../ui/statusBar";
 import { newId } from "../utils/ids";
-import { shouldSendEvents } from "./sessionGate";
+import { shouldCompleteSend, shouldSendEvents } from "./sessionGate";
 
 /**
  * Owns opt-in capture lifecycle, consent/session binding, and safe emit.
@@ -32,6 +32,8 @@ export class CaptureController {
   private sessionId: string | undefined;
   private transmitting = false;
   private client: BackendClient | undefined;
+  /** Bumped on disable/dispose to cancel in-flight async emits. */
+  private emitGeneration = 0;
 
   constructor(private readonly context: vscode.ExtensionContext) {
     this.store = new IdentityStore(context);
@@ -141,9 +143,11 @@ export class CaptureController {
   }
 
   async disableCapture(): Promise<void> {
-    // Stop collection and sending immediately.
+    // Stop collection and sending immediately (including in-flight emits).
+    this.emitGeneration += 1;
     this.transmitting = false;
     this.sessionId = undefined;
+    this.client = undefined;
     this.stopCollectors();
     await this.store.setCaptureEnabled(false);
     await this.store.clearSessionBinding();
@@ -180,6 +184,7 @@ export class CaptureController {
     eventType: CaptureEventType,
     metadata?: Record<string, unknown>,
   ): Promise<void> {
+    const startedGeneration = this.emitGeneration;
     const sessionId = this.sessionId;
     const client = this.client;
     if (
@@ -199,6 +204,19 @@ export class CaptureController {
         metadata,
       });
       assertSafeEventPayload(event);
+      // Re-check after building payload and before network I/O so disable()
+      // during an in-flight emit does not complete the POST.
+      if (
+        !shouldCompleteSend({
+          transmitting: this.transmitting,
+          sessionId: this.sessionId,
+          startedGeneration,
+          currentGeneration: this.emitGeneration,
+        }) ||
+        this.client !== client
+      ) {
+        return;
+      }
       await client.postEvent(event);
     } catch {
       // Swallow API failures — never crash the editor host.
@@ -207,7 +225,10 @@ export class CaptureController {
   }
 
   dispose(): void {
+    this.emitGeneration += 1;
     this.transmitting = false;
+    this.sessionId = undefined;
+    this.client = undefined;
     this.stopCollectors();
   }
 }

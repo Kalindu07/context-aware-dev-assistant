@@ -24,12 +24,20 @@ export class IdentityStore {
   }
 
   async getOrCreateParticipantPseudoId(): Promise<string> {
-    const existing = this.context.globalState.get<string>(KEY_PARTICIPANT);
-    if (existing) {
-      return existing;
+    // Prefer SecretStorage (same channel as the HMAC install secret).
+    const fromSecrets = await this.context.secrets.get(KEY_PARTICIPANT);
+    if (fromSecrets) {
+      return fromSecrets;
+    }
+    // One-time migration from earlier Sprint 2 builds that used globalState.
+    const legacy = this.context.globalState.get<string>(KEY_PARTICIPANT);
+    if (legacy) {
+      await this.context.secrets.store(KEY_PARTICIPANT, legacy);
+      await this.context.globalState.update(KEY_PARTICIPANT, undefined);
+      return legacy;
     }
     const id = newId();
-    await this.context.globalState.update(KEY_PARTICIPANT, id);
+    await this.context.secrets.store(KEY_PARTICIPANT, id);
     return id;
   }
 
